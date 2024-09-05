@@ -11,7 +11,6 @@ namespace TriswickAssessment.Models
         [Required]
         public string Tag { get; set; }
 
-        // Foreign Key to the Post
         public int PostId { get; set; }
 
         [ForeignKey("PostId")]
