@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TriswickAssessment.Models
 {
@@ -16,8 +17,9 @@ namespace TriswickAssessment.Models
         public DateTime DateUpdated { get; set; }
 
         public int LikeCount { get; set; }
-        public List<string> Tags { get; set; } = new List<string>();
+        public List<TagModel> Tags { get; set; } = new List<TagModel>();
 
         public List<CommentsModel> Comments { get; set; } = new List<CommentsModel>();
     }
+
 }

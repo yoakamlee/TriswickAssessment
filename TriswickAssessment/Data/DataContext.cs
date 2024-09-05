@@ -12,10 +12,11 @@ namespace TriswickAssessment.Data
         }
 
         //DB tables to be created based on mo
-        public DbSet<PostModel> posts { get; set; }
-        public DbSet<UserModel> users { get; set; }
-        public DbSet<CommentsModel> comments { get; set; }
-        public DbSet<LikesModel> likes { get; set; }
+        public DbSet<PostModel> Posts { get; set; }
+        public DbSet<UserModel> Users { get; set; }
+        public DbSet<CommentsModel> Comments { get; set; }
+        public DbSet<LikesModel> Likes { get; set; }
+        public DbSet<TagModel> Tags { get; set; }
     }
 
 }
