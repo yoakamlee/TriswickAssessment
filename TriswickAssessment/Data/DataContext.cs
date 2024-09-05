@@ -1,20 +1,21 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using TriswickAssessment.Models;
 
 namespace TriswickAssessment.Data
 {
     public class DataContext : DbContext
+    {
+        public DataContext(DbContextOptions<DataContext> options)
+              : base(options)
         {
-        public DataContext() : base("DefaultConnection")
-            {
 
-            }
-        
-        //DB tables to be created based on models - yls
-        public DbSet<PostModel> posts {  get; set; }
+        }
+
+        //DB tables to be created based on mo
+        public DbSet<PostModel> posts { get; set; }
         public DbSet<UserModel> users { get; set; }
         public DbSet<CommentsModel> comments { get; set; }
         public DbSet<LikesModel> likes { get; set; }
     }
-   
+
 }
