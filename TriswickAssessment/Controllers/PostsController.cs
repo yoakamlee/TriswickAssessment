@@ -5,8 +5,7 @@ using TriswickAssessment.Models;
 
 namespace TriswickAssessment.Controllers
 {
-    //probably change route name later? - yls 
-    [Route("api/[controller]")]
+    [Route("api/posts")]
     [ApiController]
     public class PostsController : Controller
     {
@@ -20,10 +19,8 @@ namespace TriswickAssessment.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
         {
-            //TODO: Get comments after making comment controller - yls 
-            var posts = await _context.Posts.ToListAsync();
-
-            return Ok(posts);
+            //DONE: Get comments after making comment controller - yls 
+           return await _context.Posts.Include(p => p.Comments).ToListAsync();
         }
 
         [HttpPost]
