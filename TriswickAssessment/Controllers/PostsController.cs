@@ -49,9 +49,9 @@ namespace TriswickAssessment.Controllers
         }
 
 
-        //TODO: add User auth - yls
-        [HttpPost("{id}/LikeCount")]
-        public async Task<IActionResult> LikePost(int id)
+        //UPDATE: add User auth - yls
+        [HttpPost("{id}/like/{userId}")]
+        public async Task<IActionResult> LikePost(int id, string userId)
         {
             var post = await _context.Posts.FindAsync(id);
             if (post == null)
@@ -59,12 +59,51 @@ namespace TriswickAssessment.Controllers
                 return NotFound();
             }
 
-            var alreadyLiked = await _context.Likes.FirstOrDefaultAsync(l => l.PostId == id);
+            var alreadyLiked = await _context.Likes.FirstOrDefaultAsync(l => l.PostId == id && l.UserId == userId);
 
             if(alreadyLiked != null)
             {
                 return Conflict("You have already liked this post");
             }
+
+            if(post.OriginalPostId == userId)
+            {
+                return BadRequest("Unable to like post");
+            }
+
+            var like = new LikesModel
+            {
+                PostId = post.Id,
+                UserId = userId,
+            };
+
+            _context.Likes.Add(like);
+            post.LikeCount++;
+            await _context.SaveChangesAsync();
+
+
+            return NoContent();
+        }
+
+        [HttpPost("{id}/unlike/{userId}")]
+        public async Task<IActionResult> UnlikePost(int id, string userId)
+        {
+            var post = await _context.Posts.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var like = await _context.Likes
+                .FirstOrDefaultAsync(l => l.PostId == id && l.UserId == userId);
+            if (like == null)
+            {
+                return NotFound("Like not found.");
+            }
+
+            _context.Likes.Remove(like);
+            post.LikeCount--;
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
