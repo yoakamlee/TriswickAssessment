@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TriswickAssessment.Data;
@@ -22,7 +24,6 @@ namespace TriswickAssessment.Controllers
             _context = context;
         }
 
-        //TODO: Add user roles Mod users - yls
         //register new user
         [HttpPost("register/{username}/{password}")]
         public async Task<IActionResult> Register(string username, string password)
@@ -72,6 +73,14 @@ namespace TriswickAssessment.Controllers
             });
         }
 
-        
+        //Logout user
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok();
+        }
+
+
     }
 }

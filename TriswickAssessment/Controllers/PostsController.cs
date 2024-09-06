@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TriswickAssessment.Data;
 using TriswickAssessment.Models;
@@ -19,11 +20,11 @@ namespace TriswickAssessment.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
         {
-            //DONE: Get comments after making comment controller - yls 
-           return await _context.Posts.Include(p => p.Comments).ToListAsync();
+           return await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).ToListAsync();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Regular,Moderator")]
         public async Task<ActionResult<PostModel>> CreatePost(PostModel post)
         {
             post.DateCreated = DateTime.Now;
@@ -34,11 +35,11 @@ namespace TriswickAssessment.Controllers
             return CreatedAtAction(nameof(GetPosts), new {id = post.Id});
         }
 
-        //UPDATE: uncompleted neeed to add authentication controller - yls
+        //UPDATE: completed - yls
         [HttpGet("{id}")]
         public async Task<ActionResult<PostModel>> GetPost(int id)
         {
-            var post = await _context.Posts.Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == id);
+            var post = await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).FirstOrDefaultAsync(p => p.Id == id);
 
             if (post == null)
             {
@@ -49,7 +50,7 @@ namespace TriswickAssessment.Controllers
         }
 
 
-        //UPDATE: add User auth - yls
+        //Like pots
         [HttpPost("{id}/like/{userId}")]
         public async Task<IActionResult> LikePost(int id, string userId)
         {
@@ -85,6 +86,7 @@ namespace TriswickAssessment.Controllers
             return NoContent();
         }
 
+        //Unlike posts
         [HttpPost("{id}/unlike/{userId}")]
         public async Task<IActionResult> UnlikePost(int id, string userId)
         {
@@ -107,5 +109,30 @@ namespace TriswickAssessment.Controllers
 
             return NoContent();
         }
+
+        //Moderator Ability: Tag Post for misleading
+        [HttpPost("{id}/tag/{tag}")]
+        [Authorize(Roles = "Moderator")]
+        public async Task<IActionResult> TagPost(int id, string tag)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var tagModel = new TagModel
+            {
+                Tag = tag,
+                PostId = post.Id
+            };
+
+            _context.Tags.Add(tagModel);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }

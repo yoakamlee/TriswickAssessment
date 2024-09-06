@@ -8,7 +8,6 @@ namespace TriswickAssessment.Models
         [Key]
         public int TagId { get; set; }
 
-        [Required]
         public string Tag { get; set; }
 
         public int PostId { get; set; }
