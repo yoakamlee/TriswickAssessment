@@ -47,31 +47,40 @@ namespace TriswickAssessment.Controllers
         [HttpPost("login/{username}/{password}")]
         public async Task<IActionResult> Login(string username, string password)
         {
-            //Mod User (For testing atm) - yls
-            if (username == "moderator" && password == "modpassword")
+            try
             {
+                if (username == "moderator" && password == "modpassword")
+                {
+                    return Ok(new
+                    {
+                        message = "Logged in as Moderator",
+                        Username = username,
+                        Role = "Moderator"
+                    });
+                }
+
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+
+                if (user == null)
+                {
+                    return Unauthorized("Invalid username or password.");
+                }
+
                 return Ok(new
                 {
-                    message = "Logged in as Moderator",
-                    Username = username,
-                    Role = "Moderator"
+                    message = "Login successful",
+                    Username = user.Username,
+                    Role = user.UserRole
                 });
             }
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
-
-            if(user == null)
+            catch (Exception ex)
             {
-                return Unauthorized();
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error. Please try again later.");
             }
-
-            return Ok(new
-            {
-                message = "Login successful",
-                Username = user.Username,
-                Role = user.UserRole
-            });
         }
+
 
         //Logout user
         [HttpPost("logout")]
