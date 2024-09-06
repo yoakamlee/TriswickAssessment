@@ -32,7 +32,7 @@ namespace TriswickAssessment.Controllers
                 Id = Guid.NewGuid().ToString(),
                 Username = username,
                 Password = password,
-                UserRole = "Normal",
+                UserRole = "Regular",
             };
 
             _context.Users.Add(user);
@@ -46,6 +46,17 @@ namespace TriswickAssessment.Controllers
         [HttpPost("login/{username}/{password}")]
         public async Task<IActionResult> Login(string username, string password)
         {
+            //Mod User (For testing atm) - yls
+            if (username == "moderator" && password == "modpassword")
+            {
+                return Ok(new
+                {
+                    message = "Logged in as Moderator",
+                    Username = username,
+                    Role = "Moderator"
+                });
+            }
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
 
             if(user == null)
@@ -53,7 +64,14 @@ namespace TriswickAssessment.Controllers
                 return Unauthorized();
             }
 
-            return Ok(user);
+            return Ok(new
+            {
+                message = "Login successful",
+                Username = user.Username,
+                Role = user.UserRole
+            });
         }
+
+        
     }
 }
