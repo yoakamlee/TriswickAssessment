@@ -76,7 +76,7 @@ namespace TriswickAssessment.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Catch login Error:", ex.Message);
                 return StatusCode(500, "Internal server error. Please try again later.");
             }
         }
