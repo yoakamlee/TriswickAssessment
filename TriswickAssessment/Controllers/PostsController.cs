@@ -17,11 +17,11 @@ namespace TriswickAssessment.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
-        {
-           return await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).ToListAsync();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
+        //{
+        //   return await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).ToListAsync();
+        //}
 
         [HttpPost]
         [Authorize(Roles = "Regular,Moderator")]
@@ -32,14 +32,14 @@ namespace TriswickAssessment.Controllers
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPosts), new {id = post.Id});
+            return CreatedAtAction(nameof(GetPost), new {id = post.Id});
         }
 
         //UPDATE: completed - yls
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<PostModel>> GetPost(int id)
         {
-            var post = await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).FirstOrDefaultAsync(p => p.Id == id);
+            var post = await _context.Posts.Include(p => p.Comments).Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
 
             if (post == null)
             {
