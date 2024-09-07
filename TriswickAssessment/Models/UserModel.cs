@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TriswickAssessment.Models
 {
-    public class UserModel : IdentityUser
+    public class UserModel
     {
         [Key]
         public string Id { get; set; }

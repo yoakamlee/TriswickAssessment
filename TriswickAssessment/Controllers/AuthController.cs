@@ -12,15 +12,11 @@ namespace TriswickAssessment.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly UserManager<UserModel> _userManager;
-        private readonly SignInManager<UserModel> _signInManager;
 
         private readonly DataContext _context;
 
-        public AuthController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager, DataContext context)
+        public AuthController( DataContext context)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
             _context = context;
         }
 
