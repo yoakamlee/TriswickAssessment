@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TriswickAssessment.Data;
 using TriswickAssessment.Models;
+using System.Security.Claims;
 
 namespace TriswickAssessment.Controllers
 {
@@ -40,42 +41,116 @@ namespace TriswickAssessment.Controllers
 
         //TODO: on login check if user is Mod?
         //Login user
+        //[HttpPost("login/{username}/{password}")]
+        //public async Task<IActionResult> Login(string username, string password)
+        //{
+        //    try
+        //    {
+        //        if (username == "moderator" && password == "modpassword")
+        //        {
+        //            return Ok(new
+        //            {
+        //                message = "Logged in as Moderator",
+        //                Username = username,
+        //                Role = "Moderator"
+        //            });
+        //        }
+
+        //        var user = await _context.Users
+        //            .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+
+        //        if (user == null)
+        //        {
+        //            return Unauthorized("Invalid username or password.");
+        //        }
+
+        //        return Ok(new
+        //        {
+        //            message = "Login successful",
+        //            Username = user.Username,
+        //            Role = user.UserRole
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Catch login Error:", ex.Message);
+        //        return StatusCode(500, "Internal server error. Please try again later.");
+        //    }
+        //}
+
         [HttpPost("login/{username}/{password}")]
         public async Task<IActionResult> Login(string username, string password)
         {
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                return BadRequest(new { message = "Username and password are required." });
+            }
+
             try
             {
+                // Mod User
                 if (username == "moderator" && password == "modpassword")
                 {
+                    var claims = new[]
+                    {
+                         new Claim(ClaimTypes.Name, username),
+                         new Claim(ClaimTypes.Role, "Moderator")
+                    };
+
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
+
                     return Ok(new
                     {
                         message = "Logged in as Moderator",
-                        Username = username,
+                        UserName = username,
                         Role = "Moderator"
                     });
                 }
 
+                // User
                 var user = await _context.Users
                     .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
 
                 if (user == null)
                 {
-                    return Unauthorized("Invalid username or password.");
+                    return Unauthorized(new { message = "Invalid username or password." });
                 }
+
+                var userClaims = new[]
+                {
+                     new Claim(ClaimTypes.Name, user.Username),
+                     new Claim(ClaimTypes.Role, user.UserRole)
+                 };
+
+                var userIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var userAuthProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(userIdentity), userAuthProperties);
 
                 return Ok(new
                 {
                     message = "Login successful",
-                    Username = user.Username,
+                    UserName = user.Username,
                     Role = user.UserRole
                 });
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Catch login Error:", ex.Message);
-                return StatusCode(500, "Internal server error. Please try again later.");
+                return StatusCode(500, new { message = "Internal server error. Please try again later." });
             }
         }
+
+
 
 
         //Logout user
