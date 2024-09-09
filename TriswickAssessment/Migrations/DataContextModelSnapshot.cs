@@ -103,6 +103,35 @@ namespace TriswickAssessment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Posts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateCreated = new DateTime(2024, 8, 30, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7957),
+                            DateUpdated = new DateTime(2024, 8, 30, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7969),
+                            LikeCount = 3,
+                            OriginalPostId = "user1",
+                            PostContent = "This is the first post."
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DateCreated = new DateTime(2024, 9, 4, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7971),
+                            DateUpdated = new DateTime(2024, 9, 4, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7971),
+                            LikeCount = 5,
+                            OriginalPostId = "user2",
+                            PostContent = "This is the second post."
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DateCreated = new DateTime(2024, 9, 7, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7972),
+                            DateUpdated = new DateTime(2024, 9, 7, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7973),
+                            LikeCount = 1,
+                            OriginalPostId = "user3",
+                            PostContent = "This is another interesting post."
+                        });
                 });
 
             modelBuilder.Entity("TriswickAssessment.Models.TagModel", b =>

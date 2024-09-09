@@ -20,33 +20,42 @@ namespace TriswickAssessment.Controllers
         //[HttpGet]
         //public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
         //{
-        //   return await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).ToListAsync();
+        //    return await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).ToListAsync();
         //}
 
         [HttpPost]
-        [Authorize(Roles = "Regular,Moderator")]
+        //[Authorize(Roles = "Regular,Moderator")]
         public async Task<ActionResult<PostModel>> CreatePost(PostModel post)
         {
+
+            if (await _context.Posts.AnyAsync(p => p.Id == post.Id))
+            {
+                return Conflict("Post with the same ID already exists.");
+            }
+
             post.DateCreated = DateTime.Now;
             post.DateUpdated = DateTime.Now;
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPost), new {id = post.Id});
+            return CreatedAtAction(nameof(GetAllPosts), new { id = post.Id });
         }
 
         //UPDATE: completed - yls
         [HttpGet]
-        public async Task<ActionResult<PostModel>> GetPost(int id)
+        public async Task<ActionResult<IEnumerable<PostModel>>> GetAllPosts()
         {
-            var post = await _context.Posts.Include(p => p.Comments).Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
+            var posts = await _context.Posts
+                .Include(p => p.Comments)  // Include related comments
+                .Include(p => p.Tags)      // Include related tags
+                .ToListAsync();
 
-            if (post == null)
+            if (posts == null || !posts.Any())
             {
                 return NotFound();
             }
 
-            return post;
+            return Ok(posts);
         }
 
 
@@ -62,12 +71,12 @@ namespace TriswickAssessment.Controllers
 
             var alreadyLiked = await _context.Likes.FirstOrDefaultAsync(l => l.PostId == id && l.UserId == userId);
 
-            if(alreadyLiked != null)
+            if (alreadyLiked != null)
             {
                 return Conflict("You have already liked this post");
             }
 
-            if(post.OriginalPostId == userId)
+            if (post.OriginalPostId == userId)
             {
                 return BadRequest("Unable to like post");
             }
@@ -85,6 +94,26 @@ namespace TriswickAssessment.Controllers
 
             return NoContent();
         }
+
+        //Clear Post !!! For testing purposes only
+        [HttpDelete("clearTestPosts")]
+        public async Task<IActionResult> ClearTestPosts()
+        {
+            var testPosts = await _context.Posts
+                .Where(p => p.OriginalPostId.StartsWith("test"))
+                .ToListAsync();
+
+            if (!testPosts.Any())
+            {
+                return NotFound("No test posts found.");
+            }
+
+            _context.Posts.RemoveRange(testPosts);
+            await _context.SaveChangesAsync();
+
+            return Ok("Test posts deleted successfully.");
+        }
+
 
         //Unlike posts
         [HttpPost("{id}/unlike/{userId}")]

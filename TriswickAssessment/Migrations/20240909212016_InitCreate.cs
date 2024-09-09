@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TriswickAssessment.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -107,6 +107,21 @@ namespace TriswickAssessment.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "Id", "DateCreated", "DateUpdated", "LikeCount", "OriginalPostId", "PostContent" },
+                values: new object[] { 1, new DateTime(2024, 8, 30, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7957), new DateTime(2024, 8, 30, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7969), 3, "user1", "This is the first post." });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "Id", "DateCreated", "DateUpdated", "LikeCount", "OriginalPostId", "PostContent" },
+                values: new object[] { 2, new DateTime(2024, 9, 4, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7971), new DateTime(2024, 9, 4, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7971), 5, "user2", "This is the second post." });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "Id", "DateCreated", "DateUpdated", "LikeCount", "OriginalPostId", "PostContent" },
+                values: new object[] { 3, new DateTime(2024, 9, 7, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7972), new DateTime(2024, 9, 7, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7973), 1, "user3", "This is another interesting post." });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostId",
