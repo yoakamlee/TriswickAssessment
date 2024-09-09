@@ -49,6 +49,23 @@ namespace TriswickAssessment.Data
                     LikeCount = 1
                 }
             );
+
+            modelBuilder.Entity<UserModel>().HasData(
+               new UserModel
+               {
+                   Id = "user1",
+                   Username = "regUser",
+                   Password = "Password123",
+                   UserRole = "Regular"
+               },
+               new UserModel
+               {
+                   Id = "user2",
+                   Username = "modUser",
+                   Password = "ModPassword123", 
+                   UserRole = "Moderator"
+               }
+           );
         }
     }
 
