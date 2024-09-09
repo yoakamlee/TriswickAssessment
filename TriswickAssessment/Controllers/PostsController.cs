@@ -58,42 +58,44 @@ namespace TriswickAssessment.Controllers
             return Ok(posts);
         }
 
-
-        //Like pots
-        [HttpPost("{id}/like/{userId}")]
-        public async Task<IActionResult> LikePost(int id, string userId)
+        //Add Like
+        [HttpPut("UpdateLikes/{id}")]
+        public async Task<IActionResult> UpdateLikeCount(int id)
         {
             var post = await _context.Posts.FindAsync(id);
+
             if (post == null)
             {
                 return NotFound();
             }
 
-            var alreadyLiked = await _context.Likes.FirstOrDefaultAsync(l => l.PostId == id && l.UserId == userId);
+            post.LikeCount += 1; // Increment the LikeCount by 1
+            post.DateUpdated = DateTime.Now; // Update the date
 
-            if (alreadyLiked != null)
+            try
             {
-                return Conflict("You have already liked this post");
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PostExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            if (post.OriginalPostId == userId)
-            {
-                return BadRequest("Unable to like post");
-            }
-
-            var like = new LikesModel
-            {
-                PostId = post.Id,
-                UserId = userId,
-            };
-
-            _context.Likes.Add(like);
-            post.LikeCount++;
-            await _context.SaveChangesAsync();
-
-
-            return NoContent();
+            return NoContent(); // Return 204 status code to indicate success without returning data
         }
+
+        private bool PostExists(int id)
+        {
+            return _context.Posts.Any(e => e.Id == id);
+        }
+
 
         //Clear Post !!! For testing purposes only
         [HttpDelete("clearTestPosts")]
