@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Posts</title>
+</head>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    .h2allPosts {
+        display: block;
+        font-size: 1.5em;
+        padding-left: 25px;
+        margin-block-start: 0.83em;
+        margin-block-end: 0.83em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        unicode-bidi: isolate;
+    }
+
+    textarea,
+    input,
+    button {
+        font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    textarea,
+    input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+    textarea:focus,
+    input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        margin: 20px 0;
+        border: none;
+        border-radius: 8px;
+        background-color: #007bff;
+        color: #ffffff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .AllpostContainer {
+        width: 100%;
+        max-width: 1250px;
+        background: #ffffff;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .list-container {
+        padding: 20px;
+        border-radius: 8px;
+        background: #ffffff;
+        max-height: 400px;
+        max-width: 100%;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .post-container {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .post-container p {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .like-count {
+        font-size: 12px;
+        color: #555;
+        margin-top: 10px;
+    }
+
+    .comment-section {
+        margin-top: 10px;
+    }
+
+    .comment {
+        background: #f1f1f1;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .pop-up-container,
+    .comment-input,
+    .tag-input {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        width: 300px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .pop-up-container.active,
+    .comment-input.active,
+    .tag-input.active {
+        display: block;
+    }
+
+    .pop-up-buttons button,
+    .comment-input button,
+    .tag-input button {
+        padding: 6px 8px;
+        font-size: 12px;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
+    .pop-up-buttons button:last-child,
+    .comment-input button:last-child {
+        margin-bottom: 0;
+    }
+
+    .pop-up-buttons button:hover,
+    .comment-input button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Specific styling for the "Close" button */
+    .pop-up-buttons button.close,
+    .comment-input button.close {
+        background-color: #ff4d4d;
+        /* Red color */
+        border: none;
+        color: #ffffff;
+    }
+
+    .pop-up-buttons button.close:hover,
+    .comment-input button.close:hover {
+        background-color: #cc0000;
+        /* Darker red */
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 999;
+    }
+
+    .overlay.active {
+        display: block;
+    }
+
+    .dots-placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .tag {
+        color: red;
+        /* Makes the tag text red */
+        font-weight: bold;
+    }
+
+    .dot {
+        width: 15px;
+        height: 15px;
+        margin: 0 5px;
+        background-color: #007bff;
+        border-radius: 50%;
+        animation: bounce 0.6s infinite alternate;
+    }
+
+    .dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(10px);
+        }
+    }
+</style>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="pop-up-container" id="popUpContainer">
+        <div class="pop-up-buttons">
+            <button onclick="handleTag()">Tag</button>
+            <button onclick="handleLike()">Like</button>
+            <button onclick="showCommentBox()">Comment</button>
+            <button class="close" onclick="closePopUp()">Close</button>
+        </div>
+    </div>
+
+    <div class="comment-input" id="commentInput">
+        <textarea id="commentTextarea" placeholder="Enter your comment"></textarea>
+        <button onclick="submitComment()">Submit Comment</button>
+        <button class="close" onclick="closeCommentBox()">Close</button>
+    </div>
+
+    <div class="tag-input" id="tagInput">
+        <textarea id="tagTextarea" placeholder="Enter your tag"></textarea>
+        <button onclick="submitTag()">Submit Tag</button>
+        <button class="close" onclick="closeTagBox()">Close</button>
+    </div>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Post Here!</h2>
+            <textarea id="textInput" placeholder="Type something..."></textarea>
+            <button onclick="addText()">Submit</button>
+        </div>
+    </div>
+
+    <div class="AllpostContainer">
+        <div class="list-section">
+            <h2 class="h2allPosts">All Posts</h2>
+            <div class="list-container" id="textList">
+                <!-- Placeholder dots animation when there are no posts -->
+                <div class="dots-placeholder" id="dotsPlaceholder">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPost;
+        const uri = "https://localhost:7197/api";
+        const likeCounts = {};
+    
+        // Fetch all posts
+        async function fetchPosts() {
+            try {
+                const response = await fetch(`${uri}/posts`);
+                if (!response.ok) {
+                    throw new Error('Error fetching posts');
+                }
+                const data = await response.json();
+                const textList = document.getElementById('textList');
+    
+                // Remove placeholder dots if posts are fetched
+                const dotsPlaceholder = textList.querySelector('.dots-placeholder');
+                if (dotsPlaceholder) {
+                    dotsPlaceholder.remove();
+                }
+    
+                // Clear existing posts
+                textList.innerHTML = '';
+    
+                // Create items with IDs
+                data.forEach(post => {
+                    const postContainer = document.createElement('div');
+                    postContainer.className = 'post-container';
+                    postContainer.setAttribute('data-post-id', post.id);
+    
+                    // Create tags section if available
+                    let postContent = '';
+                    if (post.tags && post.tags.length > 0) {
+                        postContent += '<div class="tag-section">';
+                        post.tags.forEach(tag => {
+                            postContent += `<strong style="color: red;">* ${tag.tag}</strong> `;
+                        });
+                        postContent += '</div>';
+                    }
+    
+                    // Create post content
+                    postContent += `
+                        <p>${post.postContent}</p>
+                        <div class="like-count">Likes: <span id="likeCount${post.id}">${post.likeCount}</span></div>
+                    `;
+    
+                    // Create comments section if available
+                    if (post.comments && post.comments.length > 0) {
+                        postContent += '<div class="comment-section">';
+                        post.comments.forEach(comment => {
+                            postContent += `<div class="comment">${comment.content}</div>`;
+                        });
+                        postContent += '</div>';
+                    }
+    
+                    postContainer.innerHTML = postContent;
+    
+                    // Add click event listener to show the pop-up
+                    postContainer.addEventListener('click', function () {
+                        currentPost = postContainer;
+                        document.getElementById('popUpContainer').classList.add('active');
+                        document.getElementById('overlay').classList.add('active');
+                    });
+    
+                    // Add the post container to the list
+                    textList.appendChild(postContainer);
+    
+                    // Initialize like count for this post
+                    likeCounts[post.id] = post.likeCount;
+                });
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        }
+    
+        // Add new text post
+        async function addText() {
+            const input = document.getElementById('textInput');
+            const text = input.value.trim();
+    
+            if (text === '') {
+                alert('Please enter some text.');
+                return;
+            }
+    
+            const originalPostId = `post-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    
+            try {
+                const response = await fetch(`${uri}/posts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        originalPostId: originalPostId,
+                        postContent: text
+                    })
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to create post');
+                }
+    
+                input.value = '';
+                fetchPosts(); 
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error creating post');
+            }
+        }
+    
+        // Show tag input box
+        function handleTag() {
+            if (currentPost) {
+                document.getElementById('tagInput').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            }
+        }
+    
+        // Handle like button click
+        async function handleLike() {
+            if (currentPost) {
+                const likeCountElement = currentPost.querySelector('.like-count span');
+                const currentLikeCount = parseInt(likeCountElement.textContent, 10);
+                const postId = currentPost.getAttribute('data-post-id');
+    
+                try {
+                    const response = await fetch(`${uri}/posts/UpdateLikes/${postId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error('Failed to update like count');
+                    }
+    
+                    likeCountElement.textContent = currentLikeCount + 1;
+                    likeCounts[postId] = currentLikeCount + 1; 
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error updating like count');
+                }
+    
+                closePopUp();
+            }
+        }
+    
+        // Show comment input box
+        function showCommentBox() {
+            document.getElementById('commentInput').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+    
+        // Submit comment
+        async function submitComment() {
+            const commentTextarea = document.getElementById('commentTextarea');
+            const comment = commentTextarea.value.trim();
+    
+            if (comment === '') {
+                alert('Please enter a comment.');
+                return;
+            }
+    
+            if (currentPost) {
+                const postId = currentPost.getAttribute('data-post-id');
+    
+                try {
+                    const response = await fetch(`${uri}/posts/${postId}/comments`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ content: comment })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error('Failed to add comment');
+                    }
+    
+                    const commentSection = document.createElement('div');
+                    commentSection.className = 'comment-section';
+                    commentSection.innerHTML = `<div class="comment">${comment}</div>`;
+                    currentPost.appendChild(commentSection);
+    
+                    closeCommentBox();
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error adding comment');
+                }
+            }
+        }
+    
+        // Close pop-up
+        function closePopUp() {
+            document.getElementById('popUpContainer').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            closeCommentBox();
+            closeTagBox();
+        }
+    
+        // Close comment input box
+        function closeCommentBox() {
+            document.getElementById('commentInput').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('commentTextarea').value = '';
+        }
+    
+        // Submit tag
+        async function submitTag() {
+            const tagTextarea = document.getElementById('tagTextarea');
+            const tag = tagTextarea.value.trim();
+    
+            if (tag === '') {
+                alert('Please enter a tag.');
+                return;
+            }
+    
+            if (currentPost) {
+                const postId = currentPost.getAttribute('data-post-id');
+    
+                try {
+                    const response = await fetch(`${uri}/posts/${postId}/tags`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ tag: tag })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error('Failed to add tag');
+                    }
+    
+                    const tagSection = document.createElement('div');
+                    tagSection.className = 'tag-section';
+                    tagSection.innerHTML = `<strong style="color: red;">* ${tag}</strong>`;
+                    currentPost.insertBefore(tagSection, currentPost.firstChild);
+    
+                    closeTagBox();
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error adding tag');
+                }
+            }
+        }
+    
+        // Close tag input box
+        function closeTagBox() {
+            document.getElementById('tagInput').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('tagTextarea').value = '';
+        }
+    
+        // Fetch posts on page load
+        fetchPosts();
+    </script>
+    
+</body>
+
+</html>
