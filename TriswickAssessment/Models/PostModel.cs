@@ -17,7 +17,6 @@ namespace TriswickAssessment.Models
         public ICollection<CommentsModel> Comments { get; set; } = new List<CommentsModel>();
         public ICollection<TagModel> Tags { get; set; } = new List<TagModel>();
 
-        //public List<CommentsModel> Comments { get; set; } = new List<CommentsModel>();
     }
 
 }
