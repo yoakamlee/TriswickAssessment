@@ -24,7 +24,6 @@ namespace TriswickAssessment.Controllers
         //}
 
         [HttpPost]
-        //[Authorize(Roles = "Regular,Moderator")]
         public async Task<ActionResult<PostModel>> CreatePost(PostModel post)
         {
 
@@ -91,6 +90,8 @@ namespace TriswickAssessment.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+
+                return Ok("Like added");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -104,7 +105,6 @@ namespace TriswickAssessment.Controllers
                 }
             }
 
-            return NoContent(); // Return 204 status code to indicate success without returning data
         }
 
         private bool PostExists(int id)
@@ -159,21 +159,17 @@ namespace TriswickAssessment.Controllers
         [HttpPost("{postId}/comments")]
         public async Task<ActionResult<CommentsModel>> AddComment(int postId, [FromBody] CommentsModel comment)
         {
-            // Check if the post exists
             var post = await _context.Posts.Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == postId);
             if (post == null)
             {
                 return NotFound();
             }
 
-            // Set the PostId and CommentDate
             comment.PostId = postId;
             comment.CommentDate = DateTime.Now;
 
-            // Add comment to the database
             _context.Comments.Add(comment);
 
-            // Also add the comment to the post's Comments collection
             post.Comments.Add(comment);
 
             try
@@ -182,11 +178,9 @@ namespace TriswickAssessment.Controllers
             }
             catch (DbUpdateException ex)
             {
-                // Handle exception (logging, etc.)
                 return StatusCode(500, "A problem happened while handling your request.");
             }
 
-            // Return the created comment with a location header
             return CreatedAtAction(nameof(GetCommentById), new { id = comment.Id }, comment);
         }
 
@@ -207,6 +201,46 @@ namespace TriswickAssessment.Controllers
 
             return Ok(comment);
         }
+
+        //Get tags
+        [HttpPost("{postId}/tags")]
+        public async Task<ActionResult<TagModel>> AddTag(int postId, [FromBody] TagModel tag)
+        {
+            // Check if the post exists
+            var post = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Tags.Add(tag);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, "A problem happened while handling your request.");
+            }
+
+            // Return the added tag with a location header
+            return CreatedAtAction(nameof(GetTagById), new { id = tag.Id }, tag);
+        }
+
+        [HttpGet("tags/{id}")]
+        public async Task<ActionResult<TagModel>> GetTagById(int id)
+        {
+            var tag = await _context.Tags.FindAsync(id);
+
+            if (tag == null)
+            {
+                return NotFound($"Tag with ID {id} not found.");
+            }
+
+            return Ok(tag);
+        }
+
 
 
 

@@ -65,20 +65,19 @@ namespace TriswickAssessment.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    TagId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tag = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PostId = table.Column<int>(type: "int", nullable: false)
+                    PostModelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tags", x => x.TagId);
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tags_Posts_PostId",
-                        column: x => x.PostId,
+                        name: "FK_Tags_Posts_PostModelId",
+                        column: x => x.PostModelId,
                         principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -112,9 +111,9 @@ namespace TriswickAssessment.Migrations
                 columns: new[] { "Id", "DateCreated", "DateUpdated", "LikeCount", "OriginalPostId", "PostContent" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 31, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6051), new DateTime(2024, 8, 31, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6075), 3, "user1", "This is the first post." },
-                    { 2, new DateTime(2024, 9, 5, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6078), new DateTime(2024, 9, 5, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6079), 5, "user2", "This is the second post." },
-                    { 3, new DateTime(2024, 9, 8, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6081), new DateTime(2024, 9, 8, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6082), 1, "user3", "This is another interesting post." }
+                    { 1, new DateTime(2024, 8, 31, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1168), new DateTime(2024, 8, 31, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1180), 3, "user1", "This is the first post." },
+                    { 2, new DateTime(2024, 9, 5, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1182), new DateTime(2024, 9, 5, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1183), 5, "user2", "This is the second post." },
+                    { 3, new DateTime(2024, 9, 8, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1244), new DateTime(2024, 9, 8, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1245), 1, "user3", "This is another interesting post." }
                 });
 
             migrationBuilder.InsertData(
@@ -142,9 +141,9 @@ namespace TriswickAssessment.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tags_PostId",
+                name: "IX_Tags_PostModelId",
                 table: "Tags",
-                column: "PostId");
+                column: "PostModelId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

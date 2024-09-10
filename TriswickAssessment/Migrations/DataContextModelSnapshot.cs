@@ -107,8 +107,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 8, 31, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6051),
-                            DateUpdated = new DateTime(2024, 8, 31, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6075),
+                            DateCreated = new DateTime(2024, 8, 31, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1168),
+                            DateUpdated = new DateTime(2024, 8, 31, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1180),
                             LikeCount = 3,
                             OriginalPostId = "user1",
                             PostContent = "This is the first post."
@@ -116,8 +116,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 9, 5, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6078),
-                            DateUpdated = new DateTime(2024, 9, 5, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6079),
+                            DateCreated = new DateTime(2024, 9, 5, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1182),
+                            DateUpdated = new DateTime(2024, 9, 5, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1183),
                             LikeCount = 5,
                             OriginalPostId = "user2",
                             PostContent = "This is the second post."
@@ -125,8 +125,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 9, 8, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6081),
-                            DateUpdated = new DateTime(2024, 9, 8, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6082),
+                            DateCreated = new DateTime(2024, 9, 8, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1244),
+                            DateUpdated = new DateTime(2024, 9, 8, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1245),
                             LikeCount = 1,
                             OriginalPostId = "user3",
                             PostContent = "This is another interesting post."
@@ -135,22 +135,22 @@ namespace TriswickAssessment.Migrations
 
             modelBuilder.Entity("TriswickAssessment.Models.TagModel", b =>
                 {
-                    b.Property<int>("TagId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostModelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Tag")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TagId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("PostModelId");
 
                     b.ToTable("Tags");
                 });
@@ -221,13 +221,9 @@ namespace TriswickAssessment.Migrations
 
             modelBuilder.Entity("TriswickAssessment.Models.TagModel", b =>
                 {
-                    b.HasOne("TriswickAssessment.Models.PostModel", "Post")
+                    b.HasOne("TriswickAssessment.Models.PostModel", null)
                         .WithMany("Tags")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
+                        .HasForeignKey("PostModelId");
                 });
 
             modelBuilder.Entity("TriswickAssessment.Models.PostModel", b =>
