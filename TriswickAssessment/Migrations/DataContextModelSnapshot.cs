@@ -108,8 +108,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 8, 30, 23, 41, 27, 696, DateTimeKind.Local).AddTicks(4574),
-                            DateUpdated = new DateTime(2024, 8, 30, 23, 41, 27, 696, DateTimeKind.Local).AddTicks(4588),
+                            DateCreated = new DateTime(2024, 8, 31, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7234),
+                            DateUpdated = new DateTime(2024, 8, 31, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7248),
                             LikeCount = 3,
                             OriginalPostId = "user1",
                             PostContent = "This is the first post."
@@ -117,8 +117,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 9, 4, 23, 41, 27, 696, DateTimeKind.Local).AddTicks(4590),
-                            DateUpdated = new DateTime(2024, 9, 4, 23, 41, 27, 696, DateTimeKind.Local).AddTicks(4591),
+                            DateCreated = new DateTime(2024, 9, 5, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7249),
+                            DateUpdated = new DateTime(2024, 9, 5, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7250),
                             LikeCount = 5,
                             OriginalPostId = "user2",
                             PostContent = "This is the second post."
@@ -126,8 +126,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 9, 7, 23, 41, 27, 696, DateTimeKind.Local).AddTicks(4592),
-                            DateUpdated = new DateTime(2024, 9, 7, 23, 41, 27, 696, DateTimeKind.Local).AddTicks(4593),
+                            DateCreated = new DateTime(2024, 9, 8, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7251),
+                            DateUpdated = new DateTime(2024, 9, 8, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7251),
                             LikeCount = 1,
                             OriginalPostId = "user3",
                             PostContent = "This is another interesting post."

@@ -12,7 +12,7 @@ using TriswickAssessment.Data;
 namespace TriswickAssessment.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240909212016_InitCreate")]
+    [Migration("20240910012635_InitCreate")]
     partial class InitCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,8 +110,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 8, 30, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7957),
-                            DateUpdated = new DateTime(2024, 8, 30, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7969),
+                            DateCreated = new DateTime(2024, 8, 31, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7234),
+                            DateUpdated = new DateTime(2024, 8, 31, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7248),
                             LikeCount = 3,
                             OriginalPostId = "user1",
                             PostContent = "This is the first post."
@@ -119,8 +119,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 9, 4, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7971),
-                            DateUpdated = new DateTime(2024, 9, 4, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7971),
+                            DateCreated = new DateTime(2024, 9, 5, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7249),
+                            DateUpdated = new DateTime(2024, 9, 5, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7250),
                             LikeCount = 5,
                             OriginalPostId = "user2",
                             PostContent = "This is the second post."
@@ -128,8 +128,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 9, 7, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7972),
-                            DateUpdated = new DateTime(2024, 9, 7, 23, 20, 15, 826, DateTimeKind.Local).AddTicks(7973),
+                            DateCreated = new DateTime(2024, 9, 8, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7251),
+                            DateUpdated = new DateTime(2024, 9, 8, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7251),
                             LikeCount = 1,
                             OriginalPostId = "user3",
                             PostContent = "This is another interesting post."
@@ -178,6 +178,22 @@ namespace TriswickAssessment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "user1",
+                            Password = "Password123",
+                            UserRole = "Regular",
+                            Username = "regUser"
+                        },
+                        new
+                        {
+                            Id = "user2",
+                            Password = "ModPassword123",
+                            UserRole = "Moderator",
+                            Username = "modUser"
+                        });
                 });
 
             modelBuilder.Entity("TriswickAssessment.Models.CommentsModel", b =>
