@@ -46,8 +46,8 @@ namespace TriswickAssessment.Controllers
         public async Task<ActionResult<IEnumerable<PostModel>>> GetAllPosts()
         {
             var posts = await _context.Posts
-                .Include(p => p.Comments)  // Include related comments
-                .Include(p => p.Tags)      // Include related tags
+                .Include(p => p.Comments)
+                .Include(p => p.Tags)
                 .ToListAsync();
 
             if (posts == null || !posts.Any())
@@ -56,6 +56,22 @@ namespace TriswickAssessment.Controllers
             }
 
             return Ok(posts);
+        }
+
+        [HttpGet("{postId}")]
+        public async Task<ActionResult<PostModel>> GetPostById(int postId)
+        {
+            var post = await _context.Posts
+                .Include(p => p.Comments)
+                .Include(p => p.Tags)
+                .FirstOrDefaultAsync(p => p.Id == postId);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(post);
         }
 
         //Add Like
@@ -117,53 +133,83 @@ namespace TriswickAssessment.Controllers
         }
 
 
-        //Unlike posts
-        [HttpPost("{id}/unlike/{userId}")]
-        public async Task<IActionResult> UnlikePost(int id, string userId)
+        // Add Comment to Post
+        //[HttpPost("{postId}/comments")]
+        //public async Task<ActionResult<CommentsModel>> AddComment(int postId, [FromBody] CommentsModel comment)
+        //{
+        //    // Check if the post exists
+        //    var post = await _context.Posts.FindAsync(postId);
+        //    if (post == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // Set the PostId and CommentDate
+        //    comment.PostId = postId;
+        //    comment.CommentDate = DateTime.Now;
+
+        //    // Add comment to the database
+        //    _context.Comments.Add(comment);
+        //    await _context.SaveChangesAsync();
+
+        //    // Return the created comment with a location header
+        //    return CreatedAtAction(nameof(GetCommentById), new { id = comment.Id }, comment);
+        //}
+
+        [HttpPost("{postId}/comments")]
+        public async Task<ActionResult<CommentsModel>> AddComment(int postId, [FromBody] CommentsModel comment)
         {
-            var post = await _context.Posts.FindAsync(id);
+            // Check if the post exists
+            var post = await _context.Posts.Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == postId);
             if (post == null)
             {
                 return NotFound();
             }
 
-            var like = await _context.Likes
-                .FirstOrDefaultAsync(l => l.PostId == id && l.UserId == userId);
-            if (like == null)
+            // Set the PostId and CommentDate
+            comment.PostId = postId;
+            comment.CommentDate = DateTime.Now;
+
+            // Add comment to the database
+            _context.Comments.Add(comment);
+
+            // Also add the comment to the post's Comments collection
+            post.Comments.Add(comment);
+
+            try
             {
-                return NotFound("Like not found.");
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Handle exception (logging, etc.)
+                return StatusCode(500, "A problem happened while handling your request.");
             }
 
-            _context.Likes.Remove(like);
-            post.LikeCount--;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            // Return the created comment with a location header
+            return CreatedAtAction(nameof(GetCommentById), new { id = comment.Id }, comment);
         }
 
-        //Moderator Ability: Tag Post for misleading
-        [HttpPost("{id}/tag/{tag}")]
-        [Authorize(Roles = "Moderator")]
-        public async Task<IActionResult> TagPost(int id, string tag)
+
+
+
+        // Get a specific comment by ID
+        [HttpGet("comments/{id}")]
+        public async Task<ActionResult<CommentsModel>> GetCommentById(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var comment = await _context.Comments
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-            if (post == null)
+            if (comment == null)
             {
-                return NotFound();
+                return NotFound($"Comment with ID {id} not found.");
             }
 
-            var tagModel = new TagModel
-            {
-                Tag = tag,
-                PostId = post.Id
-            };
-
-            _context.Tags.Add(tagModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(comment);
         }
+
+
+
 
     }
 }

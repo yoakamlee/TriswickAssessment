@@ -12,8 +12,8 @@ using TriswickAssessment.Data;
 namespace TriswickAssessment.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240910012635_InitCreate")]
-    partial class InitCreate
+    [Migration("20240910074617_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,20 +35,19 @@ namespace TriswickAssessment.Migrations
                     b.Property<DateTime>("CommentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("OriginalPostId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostContent")
+                    b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PostModelId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("PostModelId");
 
                     b.ToTable("Comments");
                 });
@@ -110,8 +109,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 8, 31, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7234),
-                            DateUpdated = new DateTime(2024, 8, 31, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7248),
+                            DateCreated = new DateTime(2024, 8, 31, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6051),
+                            DateUpdated = new DateTime(2024, 8, 31, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6075),
                             LikeCount = 3,
                             OriginalPostId = "user1",
                             PostContent = "This is the first post."
@@ -119,8 +118,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 9, 5, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7249),
-                            DateUpdated = new DateTime(2024, 9, 5, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7250),
+                            DateCreated = new DateTime(2024, 9, 5, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6078),
+                            DateUpdated = new DateTime(2024, 9, 5, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6079),
                             LikeCount = 5,
                             OriginalPostId = "user2",
                             PostContent = "This is the second post."
@@ -128,8 +127,8 @@ namespace TriswickAssessment.Migrations
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 9, 8, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7251),
-                            DateUpdated = new DateTime(2024, 9, 8, 3, 26, 35, 759, DateTimeKind.Local).AddTicks(7251),
+                            DateCreated = new DateTime(2024, 9, 8, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6081),
+                            DateUpdated = new DateTime(2024, 9, 8, 9, 46, 17, 302, DateTimeKind.Local).AddTicks(6082),
                             LikeCount = 1,
                             OriginalPostId = "user3",
                             PostContent = "This is another interesting post."
@@ -198,13 +197,9 @@ namespace TriswickAssessment.Migrations
 
             modelBuilder.Entity("TriswickAssessment.Models.CommentsModel", b =>
                 {
-                    b.HasOne("TriswickAssessment.Models.PostModel", "PostModel")
+                    b.HasOne("TriswickAssessment.Models.PostModel", null)
                         .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PostModel");
+                        .HasForeignKey("PostModelId");
                 });
 
             modelBuilder.Entity("TriswickAssessment.Models.LikesModel", b =>

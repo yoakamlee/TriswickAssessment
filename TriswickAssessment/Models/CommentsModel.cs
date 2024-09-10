@@ -7,18 +7,11 @@ namespace TriswickAssessment.Models
     {
         [Key]
         public int Id { get; set; }
-
-        [Required]
         public int PostId { get; set; }
-
-        [Required]
-        public string OriginalPostId { get; set; }
-
-        [Required]
-        public string PostContent { get; set; }
+        public string Content { get; set; }
         public DateTime CommentDate { get; set; }
 
-        [ForeignKey("PostId")]
-        public virtual PostModel PostModel { get; set; }
+        //// Navigation property
+        //public PostModel Post { get; set; }
     }
 }
