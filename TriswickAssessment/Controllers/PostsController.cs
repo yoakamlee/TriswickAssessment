@@ -18,6 +18,7 @@ namespace TriswickAssessment.Controllers
         }
 
         //Create a post
+        [Authorize(Roles = "Regular, Moderator")]
         [HttpPost]
         public async Task<ActionResult<PostModel>> CreatePost(PostModel post)
         {
@@ -70,6 +71,7 @@ namespace TriswickAssessment.Controllers
         }
 
         //Add Like
+        [Authorize(Roles = "Regular, Moderator")]
         [HttpPut("UpdateLikes/{id}")]
         public async Task<IActionResult> UpdateLikeCount(int id)
         {
@@ -103,7 +105,8 @@ namespace TriswickAssessment.Controllers
 
         }
 
-        //Dislike 
+        //Dislike
+        [Authorize(Roles = "Regular, Moderator")]
         [HttpPut("Unlike/{id}")]
         public async Task<IActionResult> UnlikePost(int id)
         {
@@ -148,6 +151,7 @@ namespace TriswickAssessment.Controllers
 
 
         //Clear Post !!! For testing purposes only
+        [Authorize(Policy = "RequireModeratorRole")]
         [HttpDelete("clearTestPosts")]
         public async Task<IActionResult> ClearTestPosts()
         {
@@ -166,6 +170,7 @@ namespace TriswickAssessment.Controllers
             return Ok("Test posts deleted successfully.");
         }
 
+        [Authorize(Roles = "Regular, Moderator")]
         [HttpPost("{postId}/comments")]
         public async Task<ActionResult<CommentsModel>> AddComment(int postId, [FromBody] CommentsModel comment)
         {
@@ -213,6 +218,7 @@ namespace TriswickAssessment.Controllers
         }
 
         //Get tags
+        [Authorize(Policy = "RequireModeratorRole")]
         [HttpPost("{postId}/tags")]
         public async Task<ActionResult<TagModel>> AddTag(int postId, [FromBody] TagModel tag)
         {
@@ -250,10 +256,6 @@ namespace TriswickAssessment.Controllers
 
             return Ok(tag);
         }
-
-
-
-
 
     }
 }

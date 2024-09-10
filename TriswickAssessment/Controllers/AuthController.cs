@@ -130,7 +130,7 @@ namespace TriswickAssessment.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok();
+            return Ok(new { message = "Logged out successfully" });
         }
 
 

@@ -31,6 +31,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/api/Auth/logout";
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireModeratorRole", policy => policy.RequireRole("Moderator"));
+    options.AddPolicy("RequireRegularUserRole", policy => policy.RequireRole("Regular"));
+});
+
+
+
 // Configure authorization (Optional)
 // builder.Services.AddAuthorization(options =>
 // {
