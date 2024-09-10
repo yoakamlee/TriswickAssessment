@@ -11,7 +11,5 @@ namespace TriswickAssessment.Models
         public string Content { get; set; }
         public DateTime CommentDate { get; set; }
 
-        //// Navigation property
-        //public PostModel Post { get; set; }
     }
 }

@@ -17,12 +17,7 @@ namespace TriswickAssessment.Controllers
             _context = context;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
-        //{
-        //    return await _context.Posts.Include(p => p.Comments).Include(p => p.LikeCount).ToListAsync();
-        //}
-
+        //Create a post
         [HttpPost]
         public async Task<ActionResult<PostModel>> CreatePost(PostModel post)
         {
@@ -40,7 +35,6 @@ namespace TriswickAssessment.Controllers
             return CreatedAtAction(nameof(GetAllPosts), new { id = post.Id });
         }
 
-        //UPDATE: completed - yls
         //Fetch all Posts 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetAllPosts()
@@ -86,8 +80,8 @@ namespace TriswickAssessment.Controllers
                 return NotFound();
             }
 
-            post.LikeCount += 1; // Increment the LikeCount by 1
-            post.DateUpdated = DateTime.Now; // Update the date
+            post.LikeCount += 1;
+            post.DateUpdated = DateTime.Now;
 
             try
             {
@@ -171,30 +165,6 @@ namespace TriswickAssessment.Controllers
 
             return Ok("Test posts deleted successfully.");
         }
-
-
-        // Add Comment to Post
-        //[HttpPost("{postId}/comments")]
-        //public async Task<ActionResult<CommentsModel>> AddComment(int postId, [FromBody] CommentsModel comment)
-        //{
-        //    // Check if the post exists
-        //    var post = await _context.Posts.FindAsync(postId);
-        //    if (post == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Set the PostId and CommentDate
-        //    comment.PostId = postId;
-        //    comment.CommentDate = DateTime.Now;
-
-        //    // Add comment to the database
-        //    _context.Comments.Add(comment);
-        //    await _context.SaveChangesAsync();
-
-        //    // Return the created comment with a location header
-        //    return CreatedAtAction(nameof(GetCommentById), new { id = comment.Id }, comment);
-        //}
 
         [HttpPost("{postId}/comments")]
         public async Task<ActionResult<CommentsModel>> AddComment(int postId, [FromBody] CommentsModel comment)

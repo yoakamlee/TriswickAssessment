@@ -10,8 +10,5 @@ namespace TriswickAssessment.Models
 
         public string Tag { get; set; }
 
-
-        //[ForeignKey("PostId")]
-        //public virtual PostModel Post { get; set; }
     }
 }

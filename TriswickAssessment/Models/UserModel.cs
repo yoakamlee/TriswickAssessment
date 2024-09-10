@@ -18,7 +18,7 @@ namespace TriswickAssessment.Models
         public string UserRole { get; set; }
     }
 
-    //UPDATE: Added Login and register model
+    
     public class Register
     {
         [Required]

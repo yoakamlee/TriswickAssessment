@@ -18,6 +18,7 @@ namespace TriswickAssessment.Data
         public DbSet<LikesModel> Likes { get; set; }
         public DbSet<TagModel> Tags { get; set; }
 
+        //Test data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PostModel>().HasData(
