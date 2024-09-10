@@ -15,9 +15,10 @@ builder.Services.AddSwaggerGen();
 // Configure CORS
 builder.Services.AddCors(options =>
 {
+    //change to allow running locally
     options.AddPolicy("AllowSpecificOrigins",
         builder => builder
-            .WithOrigins("https://localhost:7197/", "http://127.0.0.1:8080") // Replace with actual origins
+            .WithOrigins("https://localhost:7197/", "http://127.0.0.1:8080")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });

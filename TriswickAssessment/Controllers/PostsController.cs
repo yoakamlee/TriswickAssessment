@@ -41,12 +41,14 @@ namespace TriswickAssessment.Controllers
         }
 
         //UPDATE: completed - yls
+        //Fetch all Posts 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetAllPosts()
         {
             var posts = await _context.Posts
                 .Include(p => p.Comments)
                 .Include(p => p.Tags)
+                .OrderByDescending(p => p.DateUpdated)
                 .ToListAsync();
 
             if (posts == null || !posts.Any())
@@ -105,6 +107,44 @@ namespace TriswickAssessment.Controllers
                 }
             }
 
+        }
+
+        //Dislike 
+        [HttpPut("Unlike/{id}")]
+        public async Task<IActionResult> UnlikePost(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            // cant go < 0
+            if (post.LikeCount > 0)
+            {
+                post.LikeCount -= 1;
+            }
+
+            post.DateUpdated = DateTime.Now;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                return Ok("Like removed");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PostExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         private bool PostExists(int id)

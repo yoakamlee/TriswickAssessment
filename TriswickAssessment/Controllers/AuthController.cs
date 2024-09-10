@@ -22,22 +22,53 @@ namespace TriswickAssessment.Controllers
         }
 
         //register new user
-        [HttpPost("register/{username}/{password}")]
-        public async Task<IActionResult> Register(string username, string password)
+        //[HttpPost("register/{username}/{password}")]
+        //public async Task<IActionResult> Register(string username, string password)
+        //{
+        //    var user = new UserModel
+        //    {
+        //        Id = Guid.NewGuid().ToString(),
+        //        Username = username,
+        //        Password = password,
+        //        UserRole = "Regular",
+        //    };
+
+        //    _context.Users.Add(user);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(user);
+        //}
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] Register model)
         {
+            // Check if username already exists
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.UserName);
+            if (existingUser != null)
+            {
+                return Conflict(new { message = "Username already taken." });
+            }
+
+            // Create new user
             var user = new UserModel
             {
                 Id = Guid.NewGuid().ToString(),
-                Username = username,
-                Password = password,
-                UserRole = "Regular",
+                Username = model.UserName,
+                Password = model.Password, // Note: In a real application, make sure to hash the password!
+                UserRole = "Regular"
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok(user);
+            return Ok(new
+            {
+                message = "User registered successfully",
+                user.Id,
+                user.Username,
+                user.UserRole
+            });
         }
+
 
         //TODO: on login check if user is Mod?
         //Login user

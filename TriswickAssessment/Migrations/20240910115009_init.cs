@@ -111,9 +111,9 @@ namespace TriswickAssessment.Migrations
                 columns: new[] { "Id", "DateCreated", "DateUpdated", "LikeCount", "OriginalPostId", "PostContent" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 31, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1168), new DateTime(2024, 8, 31, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1180), 3, "user1", "This is the first post." },
-                    { 2, new DateTime(2024, 9, 5, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1182), new DateTime(2024, 9, 5, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1183), 5, "user2", "This is the second post." },
-                    { 3, new DateTime(2024, 9, 8, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1244), new DateTime(2024, 9, 8, 10, 46, 37, 785, DateTimeKind.Local).AddTicks(1245), 1, "user3", "This is another interesting post." }
+                    { 1, new DateTime(2024, 8, 31, 13, 50, 9, 196, DateTimeKind.Local).AddTicks(4894), new DateTime(2024, 8, 31, 13, 50, 9, 196, DateTimeKind.Local).AddTicks(4906), 3, "user1", "This is the first post." },
+                    { 2, new DateTime(2024, 9, 5, 13, 50, 9, 196, DateTimeKind.Local).AddTicks(4908), new DateTime(2024, 9, 5, 13, 50, 9, 196, DateTimeKind.Local).AddTicks(4908), 5, "user2", "This is the second post." },
+                    { 3, new DateTime(2024, 9, 8, 13, 50, 9, 196, DateTimeKind.Local).AddTicks(4909), new DateTime(2024, 9, 8, 13, 50, 9, 196, DateTimeKind.Local).AddTicks(4910), 1, "user3", "This is another interesting post." }
                 });
 
             migrationBuilder.InsertData(
